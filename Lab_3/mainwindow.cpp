@@ -41,6 +41,21 @@ MainWindow::MainWindow(QWidget *parent)
     splitter->addWidget(tableView);
     setCentralWidget(splitter);
 
+    QSplitter *splitterRight = new QSplitter(parent);
+    splitterRight->setOrientation(Qt::Vertical);
+    splitter->addWidget(splitterRight);
+
+    QSplitter *splitterEmptyVertical = new QSplitter(parent);
+    splitterEmptyVertical->setMaximumHeight(10);
+    splitterRight->addWidget(splitterEmptyVertical);
+
+    int rightopSplitterHeight = 30;
+    QSplitter *splitterRightFirst = new QSplitter(parent);
+    splitterRightFirst->setOrientation(Qt::Horizontal);
+    splitterRightFirst->setMaximumHeight(rightopSplitterHeight);
+    splitterRight->addWidget(splitterRightFirst);
+
+
     QItemSelectionModel *selectionModel = treeView->selectionModel();
     QModelIndex rootIx = dirModel->index(0, 0, QModelIndex());//корневой элемент
 
