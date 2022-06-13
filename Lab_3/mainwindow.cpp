@@ -41,19 +41,19 @@ MainWindow::MainWindow(QWidget *parent)
     splitter->addWidget(tableView);
     setCentralWidget(splitter);
 
-    QSplitter *splitterRight = new QSplitter(parent);
-    splitterRight->setOrientation(Qt::Vertical);
-    splitter->addWidget(splitterRight);
+    QSplitter *splitterRight = new QSplitter(parent);//создаем правый сплиттер
+    splitterRight->setOrientation(Qt::Vertical);//размещение элементов в нем вертикальное
+    splitter->addWidget(splitterRight);//доблавяем сплиттер к нашему основному сплиттеру, правая часть программы
 
-    QSplitter *splitterEmptyVertical = new QSplitter(parent);
-    splitterEmptyVertical->setMaximumHeight(10);
-    splitterRight->addWidget(splitterEmptyVertical);
+    QSplitter *splitterEmptyVertical = new QSplitter(parent);//пустой сплиттер, чтобы сдвинуть элементы вверху
+    splitterEmptyVertical->setMaximumHeight(10);//задаем максимальную высоту
+    splitterRight->addWidget(splitterEmptyVertical);//добавляем сплиттер
 
-    int rightopSplitterHeight = 30;
-    QSplitter *splitterRightFirst = new QSplitter(parent);
-    splitterRightFirst->setOrientation(Qt::Horizontal);
-    splitterRightFirst->setMaximumHeight(rightopSplitterHeight);
-    splitterRight->addWidget(splitterRightFirst);
+    int rightopSplitterHeight = 30;//задает высоту панели
+    QSplitter *splitterRightFirst = new QSplitter(parent);//создаем сплиттер с нашими элементами управления
+    splitterRightFirst->setOrientation(Qt::Horizontal);//ориентация размещения на нем горизонтальная
+    splitterRightFirst->setMaximumHeight(rightopSplitterHeight);//максимальная высота
+    splitterRight->addWidget(splitterRightFirst);//добавляем к нашему правому сплиттеру
 
 
     QItemSelectionModel *selectionModel = treeView->selectionModel();
