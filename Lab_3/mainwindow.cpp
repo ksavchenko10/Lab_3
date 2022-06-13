@@ -32,4 +32,82 @@ MainWindow::MainWindow(QWidget *parent)
 
     treeView = new QTreeView(); //дерево файлов
     treeView->setModel(dirModel);
+
     treeView->expandAll();
+    QSplitter *splitter = new QSplitter(parent);
+    tableView = new QTableView;
+    tableView->setModel(fileModel);
+    splitter->addWidget(treeView);
+    splitter->addWidget(tableView);
+    setCentralWidget(splitter);
+
+    QItemSelectionModel *selectionModel = treeView->selectionModel();
+    QModelIndex rootIx = dirModel->index(0, 0, QModelIndex());//корневой элемент
+
+    QModelIndex indexHomePath = dirModel->index(homePath);
+    QFileInfo fileInfo = dirModel->fileInfo(indexHomePath);
+
+    /* Рассмотрим способы обхода содержимого папок на диске.
+     * Предлагается вариант решения, которы может быть применен для более сложных задач.
+     * Итак, если требуется выполнить анализ содержимого папки, то необходимо организовать обход содержимого. Обход выполняем относительно модельного индекса.
+     * Например:*/
+    if (fileInfo.isDir()) {
+        /*
+         * Если fileInfo папка то заходим в нее, что бы просмотреть находящиеся в ней файлы.
+         * Если нужно просмотреть все файлы, включая все вложенные папки, то нужно организовать рекурсивный обход.
+        */
+        QDir dir  = fileInfo.dir();
+
+        if (dir.cd(fileInfo.fileName())) {
+            /**
+             * Если зашли в папку, то пройдемся по контейнеру QFileInfoList ,полученного методом entryInfoList,
+             * */
+
+            foreach (QFileInfo inf, dir.entryInfoList(QDir::Files | QDir::NoDotAndDotDot, QDir::Type)) {
+                qDebug() << inf.fileName() << "---" << inf.size();
+            }
+
+            dir.cdUp();//выходим из папки
+        }
+    }
+
+    QDir dir = fileInfo.dir();
+
+    foreach (QFileInfo inf, dir.entryInfoList(QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot, QDir::Type)) {
+
+        qDebug() << inf.fileName() << "---" << inf.size();
+    }
+
+
+    treeView->header()->resizeSection(0, 200);
+    //Выполняем соединения слота и сигнала который вызывается когда осуществляется выбор элемента в TreeView
+    connect(selectionModel, SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
+            this, SLOT(on_selectionChangedSlot(const QItemSelection &, const QItemSelection &)));
+    //Пример организации установки курсора в TreeView относит ельно модельного индекса
+    QItemSelection toggleSelection;
+    QModelIndex topLeft;
+    topLeft = dirModel->index(homePath);
+    dirModel->setRootPath(homePath);
+
+    toggleSelection.select(topLeft, topLeft);
+    selectionModel->select(toggleSelection, QItemSelectionModel::Toggle);
+}
+
+//Слот для обработки выбора элемента в TreeView
+//выбор осуществляется с помощью курсора
+
+void MainWindow::on_selectionChangedSlot(const QItemSelection &selected, const QItemSelection &deselected)
+{
+    Q_UNUSED(deselected);
+    redraw(); //вызываем функции перерисовки графика
+}
+
+void MainWindow::on_checkBoxClicked()
+{
+    redraw(); //вызываем функции перерисовки графика
+}
+
+void MainWindow::on_comboBoxChanged()
+{
+   redraw(); //вызываем функции перерисовки графика
+}
