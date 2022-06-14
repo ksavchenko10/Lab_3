@@ -34,11 +34,10 @@ MainWindow::MainWindow(QWidget *parent)
     treeView->setModel(dirModel);
 
     treeView->expandAll();
-    QSplitter *splitter = new QSplitter(parent);
-    tableView = new QTableView;
-    tableView->setModel(fileModel);
-    splitter->addWidget(treeView);
-    splitter->addWidget(tableView);
+    QSplitter *splitter = new QSplitter(parent);//создаем сплиттер
+    tableView = new QTableView;//создаем таблицу
+    tableView->setModel(fileModel);//добавляем наше дерево файлов в таблицу
+    splitter->addWidget(tableView);//добавляем таблицу к сплиттеру
     setCentralWidget(splitter);
 
     QSplitter *splitterRight = new QSplitter(parent);//создаем правый сплиттер
@@ -54,6 +53,13 @@ MainWindow::MainWindow(QWidget *parent)
     splitterRightFirst->setOrientation(Qt::Horizontal);//ориентация размещения на нем горизонтальная
     splitterRightFirst->setMaximumHeight(rightopSplitterHeight);//максимальная высота
     splitterRight->addWidget(splitterRightFirst);//добавляем к нашему правому сплиттеру
+
+    QLabel *caption = new QLabel("Выберите тип диаграммы: "); //текст
+    caption->setMaximumWidth(200); //максимальная ширина
+    caption->setAlignment(Qt::AlignRight|Qt::AlignCenter); //ориентация право по горизонтали и по вертикали по середине
+    caption->setMaximumHeight(rightopSplitterHeight); //максимальная высота
+    splitterRightFirst->addWidget(caption); //добавляем к сплиттеру
+
 
 
     QItemSelectionModel *selectionModel = treeView->selectionModel();
